@@ -30,7 +30,7 @@
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
   
-      fetch('/api/login', {
+      fetch('/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,6 +42,8 @@
         if (data.success) {
           // Handle successful login
           console.log('Login successful');
+          window.location.href = '/'; // Redirect to the index page
+          sessionStorage.setItem('loggedIn', true);
         } else {
           // Handle login failure
           console.error('Login failed');

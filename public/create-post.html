@@ -26,35 +26,40 @@
         <textarea id="content" name="content" required></textarea>
       </div>
       <div class="form-group">
+        <label for="author">Author</label>
+        <input type="text" id="author" name="author">
+    </div>    
+      <div class="form-group">
         <input type="submit" value="Submit Post">
       </div>
     </form>
   </section>
 
   <script>
-    document.getElementById('create-post-form').addEventListener('submit', function(event) {
-      event.preventDefault();
+  document.getElementById('create-post-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const title = document.getElementById('title').value;
+    const content = document.getElementById('content').value;
+    const author = document.getElementById('author').value || 'Anon';
     
-      const title = document.getElementById('title').value;
-      const content = document.getElementById('content').value;
-      
-      // Replace `/post` with your actual backend endpoint for creating posts
-      fetch('/post', {
+    fetch('/post', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title: title, content: content }),
-      })
-      .then(response => response.json())
-      .then(data => {
+        body: JSON.stringify({ title, content, author }),
+    })
+    .then(response => response.json())
+    .then(data => {
         console.log('Success:', data);
         window.location.href = '/'; // Redirect to the index page
-      })
-      .catch((error) => {
+    })
+    .catch((error) => {
         console.error('Error:', error);
-      });
     });
+});
+
     </script>
     
 

@@ -45,25 +45,31 @@ app.post('/login', (req, res) => {
             return;
         }
         if (user) {
-            res.json({ success: true, userId: user.id }); // Ideally, you should create a session or token here
+            res.json({ success: true, message: "Logged in successfully", userId: user.id });
         } else {
-            res.status(401).json({ success: false, message: 'Invalid credentials' });
+            res.status(401).json({ error: "Invalid credentials" });
         }
     });
 });
 
 // Route for creating a new blog post
 app.post('/post', (req, res) => {
-    const { title, content, user_id } = req.body;  // user_id can be undefined
-    const query = `INSERT INTO posts (title, content, user_id) VALUES (?, ?, ?)`;
-  
-    db.run(query, [title, content, user_id], function(err) {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ success: true, postId: this.lastID });
+    const { title, content, author } = req.body; // Now including the author received from the request
+    
+    // Insert the new post with the provided title, content, and author into the database
+    const query = 'INSERT INTO posts (title, content, author) VALUES (?, ?, ?)';
+    db.run(query, [title, content, author], function(err) {
+        if (err) {
+            // If an error occurs, send a 500 status code with the error message
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        // On success, send back the ID of the newly created post
+        res.json({ success: true, postId: this.lastID });
     });
-  });
+});
+
+
   
   
 
@@ -79,6 +85,34 @@ app.get('/posts', (req, res) => {
         res.json({ success: true, posts: posts });
     });
 });
+
+app.post('/register', (req, res) => {
+    const { name, email, password } = req.body;
+    const query = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
+
+    // Check if user already exists
+    db.get(`SELECT email FROM users WHERE email = ?`, [email], (err, row) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        if (row) {
+            res.status(409).json({ error: "User already exists" });
+        } else {
+            // No user exists, create a new user
+            db.run(query, [name, email, password], function(err) {
+                if (err) {
+                    res.status(500).json({ error: err.message });
+                    return;
+                }
+                res.status(201).json({ success: true, userId: this.lastID });
+            });
+        }
+    });
+});
+
+
+
 
 // Start server
 app.listen(port, () => {

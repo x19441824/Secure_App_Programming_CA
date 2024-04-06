@@ -37,6 +37,14 @@ db.run(`CREATE TABLE IF NOT EXISTS posts (
   }
 });
 
+db.run('ALTER TABLE posts ADD COLUMN author TEXT', (err) => {
+  if (err) {
+    console.error(err.message);
+  } else {
+    console.log('Author added.');
+  }
+});
+
 // Close the database connection
 db.close((err) => {
   if (err) {

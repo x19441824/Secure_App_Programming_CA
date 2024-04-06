@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Blog Application</title>
+</head>
+<body>
+    <header>
+        <h1>Blog Application</h1>
+        <p>Register for a new account</p>
+    </header>
+    <section>
+        <form id="register-form">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Register">
+            </div>
+            <div>
+                <p>Already have an account? <a href="login.html">Log in</a></p>
+            </div>
+        </form>
+    </section>
+    <script>
+        document.getElementById('register-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: name, email: email, password: password }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Registration successful');
+                    window.location.href = 'login.html'; // Redirect to login page
+                } else {
+                    console.error('Registration failed:', data.error);
+                    // Display error message to the user
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // Display error message to the user
+            });
+        });
+    </script>
+</body>
+</html>
