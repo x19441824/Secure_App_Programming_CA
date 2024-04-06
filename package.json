@@ -1,0 +1,23 @@
+{
+  "name": "security_ca",
+  "version": "1.0.0",
+  "description": "My Security CA Node.js project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x19441824/Secure_App_Programming_CA.git"
+  },
+  "author": "James McGrath",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/x19441824/Secure_App_Programming_CA/issues"
+  },
+  "homepage": "https://github.com/x19441824/Secure_App_Programming_CA#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7"
+  }
+}

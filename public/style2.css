@@ -1,0 +1,95 @@
+/* Add this to your existing style.css file */
+
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Page Formatting */
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #f0f0f0;
+    color: #333;
+  }
+  
+  /* Header Styles */
+  header {
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  header h1 {
+    font-size: 24px;
+  }
+  
+  /* Section and Form Styling */
+  section {
+    margin: 20px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="submit"],
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .form-group textarea {
+    height: 150px; /* Adjust height as per your design */
+  }
+  
+  input[type="submit"] {
+    background: #5cb85c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  input[type="submit"]:hover {
+    background: #4cae4c;
+  }
+  
+  /* Navigation Link Styles */
+  nav a {
+    text-decoration: none;
+    color: #333;
+    padding: 5px 10px;
+  }
+  
+  /* Footer Styles */
+  footer {
+    text-align: center;
+    padding: 20px;
+    background: #fff;
+    border-top: 1px solid #ddd;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 600px) {
+    header, section, footer {
+      padding: 10px;
+    }
+  }
+  
