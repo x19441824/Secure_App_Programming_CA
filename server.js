@@ -44,6 +44,7 @@ app.use(express.static('public'));
 const db = require('./db');
 
 const { check } = require('express-validator');
+const { validationResult } = require('express-validator');
 
 
 // Route for user registration
