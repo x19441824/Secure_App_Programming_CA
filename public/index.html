@@ -11,15 +11,36 @@
   <header>
     <h1>Blog Application</h1>
     <p>Message of the day</p>
+    <div id="messageDisplay"></div>
+    <form id="search-form">
+      <input type="text" id="search-term" name="search" placeholder="Search...">
+      <input type="submit" value="Search">
+  </form>
     <div>
       <button id="login-btn" onclick="location.href='login.html'">Log in</button>
       <button onclick="location.href='create-post.html'">Create Post</button>
     </div>
   </header>
   <section id="posts-container">
+    <div id="search-results"></div>
     <article></article>
   </section>
   <script>
+
+window.addEventListener('DOMContentLoaded', (event) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const msg = urlParams.get('msg');
+    if (msg) {
+        document.getElementById('messageDisplay').innerHTML = msg;
+    }
+});
+
+    document.getElementById('search-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const searchTerm = document.getElementById('search-term').value;
+    const encodedSearchTerm = encodeURIComponent(searchTerm);
+    window.location.href = '/search?term=' + encodedSearchTerm;
+});
     // Assuming 'loggedIn' is a flag you set in sessionStorage when the user logs in
 const loggedIn = sessionStorage.getItem('loggedIn');
 

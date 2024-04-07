@@ -3,7 +3,6 @@ const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const port = 3000;
 
-// Middleware to parse JSON bodies
 app.use(express.json());
 
 // Serve static files from the 'public' directory
@@ -17,11 +16,9 @@ const db = new sqlite3.Database('./blog.db', sqlite3.OPEN_READWRITE, (err) => {
     console.log('Connected to the blog.db database.');
 });
 
-// Define routes here
-
 // Route for user registration
 app.post('/register', (req, res) => {
-    const { name, email, password } = req.body; // In a real app, you should hash the password!
+    const { name, email, password } = req.body;
     const query = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
 
     db.run(query, [name, email, password], function(err) {
@@ -37,7 +34,8 @@ app.post('/register', (req, res) => {
 // Route for user login
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
-    const query = `SELECT * FROM users WHERE email = ? AND password = ?`;
+    const query = "SELECT * FROM users WHERE email = '" + email + "' AND password = '" + password + "'";
+
 
     db.get(query, [email, password], (err, user) => {
         if (err) {
@@ -54,23 +52,21 @@ app.post('/login', (req, res) => {
 
 // Route for creating a new blog post
 app.post('/post', (req, res) => {
-    const { title, content, author } = req.body; // Now including the author received from the request
-    
-    // Insert the new post with the provided title, content, and author into the database
+    const { title, content, author } = req.body; 
     const query = 'INSERT INTO posts (title, content, author) VALUES (?, ?, ?)';
     db.run(query, [title, content, author], function(err) {
         if (err) {
-            // If an error occurs, send a 500 status code with the error message
             res.status(500).json({ error: err.message });
             return;
         }
-        // On success, send back the ID of the newly created post
         res.json({ success: true, postId: this.lastID });
     });
 });
 
-
-  
+app.get('/search', (req, res) => {
+    const searchTerm = req.query.term;
+    res.send(`Search results for: ${searchTerm}`);
+});
   
 
 // Route for fetching all blog posts
