@@ -5,9 +5,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login - Blog app</title>
-<style>
-  /* Add your CSS styling here */
-</style>
 </head>
 <body>
   <h1>Blog app</h1>
@@ -20,12 +17,12 @@
       <input type="password" id="password" name="password" required>
       
       <input type="submit" value="Log in">
-      <button onclick="location.href='register.html'">Register</button>
+      <button> <a href="register.html">Register</a></button>
     </form>
   </div>
   <script>
     document.querySelector('form').addEventListener('submit', function(event) {
-      event.preventDefault(); // Prevents the form from submitting the default way
+      event.preventDefault();
   
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
@@ -42,7 +39,7 @@
         if (data.success) {
           // Handle successful login
           console.log('Login successful');
-          window.location.href = '/'; // Redirect to the index page
+          window.location.href = '/'; 
           sessionStorage.setItem('loggedIn', true);
         } else {
           // Handle login failure

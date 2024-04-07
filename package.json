@@ -17,7 +17,12 @@
   },
   "homepage": "https://github.com/x19441824/Secure_App_Programming_CA#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^4.19.2",
-    "sqlite3": "^5.1.7"
+    "express-validator": "^7.0.1",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "sqlite3": "^5.1.7",
+    "xss": "^1.0.15"
   }
 }

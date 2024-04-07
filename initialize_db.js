@@ -8,7 +8,7 @@ const db = new sqlite3.Database('./blog.db', (err) => {
   console.log('Connected to the SQLite database.');
 });
 
-// Create 'users' table
+// Creates the table for users
 db.run(`CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
@@ -22,7 +22,7 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
   }
 });
 
-// Create 'posts' table
+// Creates the table for posts
 db.run(`CREATE TABLE IF NOT EXISTS posts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER,

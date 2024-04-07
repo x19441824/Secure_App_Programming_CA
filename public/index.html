@@ -17,8 +17,8 @@
       <input type="submit" value="Search">
   </form>
     <div>
-      <button id="login-btn" onclick="location.href='login.html'">Log in</button>
-      <button onclick="location.href='create-post.html'">Create Post</button>
+      <button id="login-btn" ><a href="login.html">Log in</a></button>
+      <button ><a href="create-post.html">Create Post</a></button>
     </div>
   </header>
   <section id="posts-container">
@@ -50,24 +50,31 @@ if (loggedIn) {
     document.getElementById('login-btn').style.display = 'block';
 }
     window.addEventListener('load', () => {
-      fetch('/posts')
-        .then(response => response.json())
-        .then(data => {
-          if (data.success && data.posts) {
-            const postsContainer = document.querySelector('#posts-container');
-            data.posts.forEach(post => {
-              const postElement = document.createElement('article');
-              postElement.innerHTML = `
-                <h2>${post.title}</h2>
-                <h3>${post.author}</h3>
-                <p>${post.content}</p>
-              `;
-              postsContainer.appendChild(postElement);
-            });
-          }
-        })
-        .catch(error => console.error('Error loading posts:', error));
-    });
+  fetch('/posts')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success && data.posts) {
+        const postsContainer = document.querySelector('#posts-container');
+        data.posts.forEach(post => {
+          const postElement = document.createElement('article');
+          const postTitle = document.createElement('h2');
+          const postAuthor = document.createElement('h3');
+          const postContent = document.createElement('p');
+          
+          postTitle.textContent = post.title; // Securely setting text
+          postAuthor.textContent = post.author; // Securely setting text
+          postContent.textContent = post.content; // Securely setting text
+          
+          postElement.appendChild(postTitle);
+          postElement.appendChild(postAuthor);
+          postElement.appendChild(postContent);
+          postsContainer.appendChild(postElement);
+        });
+      }
+    })
+    .catch(error => console.error('Error loading posts:', error));
+});
+
     </script>
     
   

@@ -2,22 +2,59 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const app = express();
 const port = 3000;
+const helmet = require('helmet');
+const https = require('https');
+const fs = require('fs');
+
+const options = {
+    key: fs.readFileSync('key.pem'), 
+    cert: fs.readFileSync('cert.pem'), 
+  };
+
+  https.createServer(options, app).listen(443, () => {
+    console.log('HTTPS Server running on port 443');
+});
+
+const morgan = require('morgan');
+
+// Create a writer for logging files
+var path = require('path');
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+
+// Setup the logger
+app.use(morgan('combined', { stream: accessLogStream }));
+
+app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://localhost/", "'unsafe-inline'"],
+      }
+    }
+  }));
+  
 
 app.use(express.json());
 
-// Serve static files from the 'public' directory
+
+// Serve static files from the 'public' folder
 app.use(express.static('public'));
 
-// Connect to the SQLite database
-const db = new sqlite3.Database('./blog.db', sqlite3.OPEN_READWRITE, (err) => {
-    if (err) {
-        console.error(err.message);
-    }
-    console.log('Connected to the blog.db database.');
-});
+
+const db = require('./db');
+
+const { check } = require('express-validator');
+
 
 // Route for user registration
-app.post('/register', (req, res) => {
+app.post('/register', [
+    check('email').isEmail(),
+    check('password').isLength({ min: 6 })
+  ], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     const { name, email, password } = req.body;
     const query = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
 
@@ -34,9 +71,7 @@ app.post('/register', (req, res) => {
 // Route for user login
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
-    const query = "SELECT * FROM users WHERE email = '" + email + "' AND password = '" + password + "'";
-
-
+    const query = `SELECT * FROM users WHERE email = ? AND password = ?`;
     db.get(query, [email, password], (err, user) => {
         if (err) {
             res.status(500).json({ error: err.message });
@@ -52,8 +87,8 @@ app.post('/login', (req, res) => {
 
 // Route for creating a new blog post
 app.post('/post', (req, res) => {
-    const { title, content, author } = req.body; 
-    const query = 'INSERT INTO posts (title, content, author) VALUES (?, ?, ?)';
+    const { title, content, author } = req.body;
+    const query = `INSERT INTO posts (title, content, author) VALUES (?, ?, ?)`;
     db.run(query, [title, content, author], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
@@ -63,10 +98,14 @@ app.post('/post', (req, res) => {
     });
 });
 
+const xss = require('xss');
+
 app.get('/search', (req, res) => {
-    const searchTerm = req.query.term;
+    let searchTerm = req.query.q;
+    searchTerm = xss(searchTerm); // Sanitize the search term
     res.send(`Search results for: ${searchTerm}`);
 });
+
   
 
 // Route for fetching all blog posts
@@ -84,10 +123,9 @@ app.get('/posts', (req, res) => {
 
 app.post('/register', (req, res) => {
     const { name, email, password } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, saltRounds); // Hash the password
     const query = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
-
-    // Check if user already exists
-    db.get(`SELECT email FROM users WHERE email = ?`, [email], (err, row) => {
+    db.run(query, [name, email, hashedPassword], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
